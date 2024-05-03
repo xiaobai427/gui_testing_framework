@@ -1,0 +1,37 @@
+log-level: DEBUG
+
+report:
+  html:
+    template:
+
+post-processes:
+  - sample.base.listener.hook
+
+runners:
+  - process-count: 0
+    is-prerequisite: True
+    log-level: CRITICAL
+    id: pc
+    testsuites:
+      - name: Test suite1
+        tests:
+          - testcase:
+              path: sample.base.test_equal.EqualTestCase.test_int
+
+  - process-count: 1
+    log-level: CRITICAL
+    id: dut1
+    testsuites:
+      - name: Test suite1
+        tests:
+          - testcase:
+              path: sample.base.test_equal.EqualTestCase.test_int
+
+  - process-count: 1
+    log-level: CRITICAL
+    id: dut2
+    testsuites:
+      - name: Test suite2
+        tests:
+          - testcase:
+              path: sample.base.test_equal.EqualTestCase.test_int

@@ -1,0 +1,18 @@
+testsuites:
+  - name: test suite
+    tests:
+      - yml-loader:
+          filename: tests_ext_yaml1.yml
+          includes:
+            - test_int                      # include testcases by checking regexp pattern in name or path
+          parameters:
+            param1: 1
+            param2: 2
+
+      - yml-loader:
+          filename: tests_ext_yaml2.yml
+          excludes:
+            - soft_assertions_test1          # exclude testcases by checking regexp pattern in name or path
+          parameters:
+            param1: 1
+            param2: 1

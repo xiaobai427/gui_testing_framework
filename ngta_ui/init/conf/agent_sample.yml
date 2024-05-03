@@ -1,0 +1,26 @@
+ampq_url: &AMQP_URL amqp://guest:guest@localhost:5672
+
+etcd:
+  host: localhost
+  port: 2379
+  api_path: /v3/
+
+webapp:
+  listen:
+    address: localhost
+    port: 7070
+
+executor:
+  url: *AMQP_URL
+  topic: cavia.object.topic
+  dlx_topic: cavia.object.dlx.topic
+  heartbeat: 60
+  magna_url: http://localhost:8080/api/v1
+  observers:
+    - (): ngta.interceptor.TestRecordAmqpInterceptor
+      url: *AMQP_URL
+      exchange_name: cavia.record.topic
+      exchange_type: topic
+      log_base_dir: ..
+    - (): ngta.agent.interceptor.TestLogFileInterceptor
+      log_dir: ../logs

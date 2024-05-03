@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<service>
+    <!-- https://github.com/kohsuke/winsw -->
+    <id>ngta_agent</id>
+    <name>ngta_agent</name>
+    <description>ngta agent</description>
+    <executable>python</executable>
+    <arguments>-m ngta.agent run</arguments>
+    <interactive />
+    <!--<startmode>Automatic</startmode>-->
+    <stopparentprocessfirst>true</stopparentprocessfirst>
+    <!--<logpath>../logs</logpath>-->
+    <log mode="roll-by-size">
+        <sizeThreshold>10240</sizeThreshold>
+        <keepFiles>8</keepFiles>
+    </log>
+</service>

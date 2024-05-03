@@ -1,0 +1,15 @@
+process-count: 1
+
+testbench:
+  (): ngta.ext.web.TestBench
+  name: test environment
+  type: web
+  browser: Chrome
+  url: https://www.python.org
+  auto_close: True
+
+testsuites:
+  - name: test suite
+    tests:
+      - obj-loader:
+          path: sample.web.test_python

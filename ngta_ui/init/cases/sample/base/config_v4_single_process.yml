@@ -1,0 +1,37 @@
+testbench:
+  (): sample.base.bench.TestBench
+
+testsuites:
+  - name: test suite
+    tests:
+      - cls-loader:
+          path: sample.base.test_equal.EqualTestCase
+          as-testsuite: cls-loader suite
+          repeat-number: 2
+          repeat-foreach: true
+          methods:
+            - name: test_int
+              repeat-number: 2
+              parameters:
+                value1: 2
+                value2: 3
+      - tag-loader:
+          tag: regression
+          as-testsuite: tag-loader suite
+          repeat-number: 2
+          repeat-foreach: true
+          locate:
+            - path: sample.base.test_equal.EqualTestCase
+              inject:
+                test_int:
+                  parameters:
+                    value1: 3
+                  iterations:
+                    value2: [3, 4, 5]
+      - obj-loader:
+          path: sample.base.test_equal
+          as-testsuite: pkg-loader suite
+          repeat-number: 2
+          repeat-foreach: true
+      - testcase:
+          path: sample.base.test_equal.test_function

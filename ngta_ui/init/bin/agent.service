@@ -1,0 +1,13 @@
+[Unit]
+Description=NGTA agent daemon
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=
+ExecStart=python3 -m ngta.agent
+Restart=on-failure
+SyslogIdentifier=ngta_agent
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,8 @@
+- testcase:
+    path: sample.base.test_equal.EqualTestCase.test_int
+    parameters:
+      value1: ${param1:1}     # set default value as 1 if param1 not defined.
+      value2: ${param2}
+
+- testcase:
+    path: sample.base.test_equal.EqualTestCase.test_parametrize

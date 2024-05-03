@@ -1,0 +1,9 @@
+testbenches:
+  - (): ngta.TestBench
+    name: TB-SAMPLE1
+    type: type1
+  - (): ngta.TestBench
+    name: TB-SAMPLE2
+    type: type2
+    exclusive: True
+    routes: [routing1, routing2]

@@ -1,0 +1,13 @@
+tests:
+  - testcase:
+      path: sample.base.test_equal.EqualTestCase.test_int
+      parameters:
+        v1: ${param1}
+        v2: ${param2}
+
+  - testcase:
+      name: soft_assertions_test1
+      path: sample.base.test_equal.EqualTestCase.test_soft_assertions
+      parameters:
+        v1: ${param1}
+        v2: ${param2}

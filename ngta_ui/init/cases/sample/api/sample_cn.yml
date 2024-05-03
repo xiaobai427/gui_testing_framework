@@ -1,0 +1,73 @@
+api:
+  # 测试api的类型，目前只支持http
+  type: http
+
+  # 文档地址
+  help: ''
+
+  # 全局变量定义，可在<测试名称>和当前测试中通过${var1}进行引用
+  define:
+    var1: 1
+    var2: 我是字符串变量
+
+  tests:
+    <测试名称 - ${params}>:
+      # 参数化配置，可在<测试名称>和当前测试中通过${params}进行引用
+      parametrize:
+        params:
+        - { testplan_id: 1 }
+      request:
+        # url和path二选一，如果只有path，那么会使用testbench中配置的base_url与path拼接成url
+        url: ''
+        path: ''
+
+        # http方法：GET, POST, PUT, DELETE等
+        method:
+
+        # url中的查询参数
+        params: {}
+
+        # 请求中带有的http头
+        headers: {}
+
+        # data和json二选一，如果有json，那么content-type会自动设置为application/json，并将json作为body进行发送。
+        json: {}
+        data: ''
+      assertions:
+        # 校验状态码
+        status_code: 200
+
+        # 使用标签!assert进行比较，详细方法参考https://github.com/ActivisionGameScience/assertpy#dicts
+        headers: !assert
+          contains_entry:
+            - content-type: application/json; charset=utf-8
+            - cache-control: no-cache
+
+        # 针对body转换成的text，进行校验
+        # 如果提供字符串，那么则应该完全匹配；
+        # 也可基于assertpy的string类型进行校验，请使用!assert标签
+        text:
+
+        # 针对body转换成的json，进行校验
+        json:
+          # 根据jsonschema进行验证：https://json-schema.org/understanding-json-schema/index.html
+          schema:
+
+          # 根据jsonpath进行验证：http://goessner.net/articles/JsonPath/
+          search:
+            # 直接与结果进行比较
+            <jsonpath路径1>: 0
+
+            # 与sql语句结果进行比较，使用!exec:sql标记
+            <jsonpath路径4>: !exec:sql
+              query: SELECT * FROM testexecution WHERE testplan_id=:testplan_id
+              params: ${params}
+
+
+            # 调用回调函数进行判断，使用标识!assert:callback
+            # 回调函数前两个参数固定为：testcase对象，actual_value。其他参数由下面的args和kwds提供。
+            <jsonpath路径3>: !assert:callback
+              path: # 函数全路径
+              args: # 提供位置参数
+              kwds: # 提供关键字参数
+

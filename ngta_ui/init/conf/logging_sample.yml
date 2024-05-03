@@ -1,0 +1,23 @@
+version: 1
+disable_existing_loggers: False
+formatters:
+  verbose:
+    (): coupling.log.NameTruncatedFormatter
+    format: "%(asctime)-15s [%(levelname)-8s] %(processName)-12s %(threadName)-12s [%(name)20s:%(lineno)4d] - %(message)s"
+handlers:
+  console:
+    class: logging.StreamHandler
+    level: DEBUG
+    formatter: verbose
+  file_agent:
+    class: logging.handlers.RotatingFileHandler  # must set subprocess.Popen(close_fds=True)
+    level: DEBUG
+    formatter: verbose
+    filename: ../logs/agent.log
+    maxBytes: 50000000
+    backupCount: 10
+root:
+  level: DEBUG
+  handlers:
+    - console
+    - file_agent

@@ -1,0 +1,263 @@
+{
+  "id": "api.json",
+  "type": "object",
+  "properties": {
+    "api": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": [ "http" ] },
+        "help": { "type": "string" },
+        "define": { "type": "object" },
+        "tests": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/http"
+              }
+            },
+            {
+              "type": "object",
+              "patternProperties": {
+                "^S_": {
+                  "$ref": "#/definitions/http"
+                }
+              }
+            }
+          ]
+        }
+      },
+      "required": [ "type", "tests" ],
+      "additionalProperties": false
+    }
+  },
+  "required": ["api"],
+  "additionalProperties": false,
+
+  "definitions": {
+    "http": {
+      "type": "object",
+      "properties": {
+        "skip": { "type": ["boolean", "string"] },
+        "fixture": { "$ref": "#/definitions/fixture" },
+        "parametrize": { "type": "object" },
+        "request": { "$ref": "#/definitions/request" },
+        "assertions": { "$ref": "#/definitions/assertions" }
+      },
+      "required": ["request", "assertions"],
+      "additionalProperties": false
+    },
+
+    "fixture": { "type": "object" },
+
+    "request": {
+      "type": "object",
+      "properties": {
+        "url": { "type": "string" },
+        "path": { "type": "string" },
+        "method": {
+          "type": "string",
+          "enum": [
+            "GET", "PUT", "POST", "DELETE", "PATCH", "HEAD", "OPTIONS", "TRACE", "CONNECT",
+            "get", "put", "post", "delete", "patch", "head", "options", "trace", "connect"
+          ]
+        },
+        "params": { "type": "object" },
+        "headers": { "type": "object" },
+        "data": { "type": ["string", "array", "object"] },
+        "json": { "type": ["array", "object"] }
+      },
+      "additionalProperties": true
+    },
+
+
+    "response": {
+      "type": "object",
+      "properties": {
+        "status_code": { "$ref": "#/definitions/status_code" },
+        "reason": { "$ref": "#/definitions/reason" },
+        "headers": { "$ref": "#/definitions/matching_dict" },
+        "json": { "$ref": "#/definitions/json" },
+        "text": { "$ref": "#/definitions/text" }
+      },
+      "additionalProperties": false
+    },
+
+
+    "status_code": {
+      "oneOf": [
+        { "type": "integer" },
+        { "$ref": "#/definitions/matching_integer" }
+      ]
+    },
+
+    "reason": {
+      "oneOf": [
+        { "type": "string" },
+        { "$ref": "#/definitions/matching_string" }
+      ]
+    },
+
+    "text": {
+      "oneOf": [
+        { "type": "string" },
+        { "$ref": "#/definitions/matching_string" }
+      ]
+    },
+
+    "json": {
+      "type": "object",
+      "properties": {
+        "schema": { "type": "string" },
+        "paths": {
+          "oneOf": [
+            {
+              "type": "object",
+              "patternProperties": {
+                "^S_": { "$ref": "#/definitions/path_dict_item" }
+              },
+              "additionalProperties": false
+            },
+            {
+              "type": "array",
+              "items": { "$ref": "#/definitions/path_list_item" }
+            }
+          ]
+        }
+      }
+    },
+
+    "path_list_item": {
+      "type": "object",
+      "properties": {
+        "search": { "type": "string" },
+        "message": { "type": "string" }
+      },
+      "patternProperties": {
+        "^S_": {}
+      },
+      "additionalProperties": false
+    },
+
+    "path_dict_item": {
+      "type": "object",
+      "patternProperties": {
+        "^S_": {
+          "type": "object",
+          "properties": {
+            "message": { "type": "string" }
+          },
+          "patternProperties": {
+            "^S_": {}
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+
+    "matching_string": {
+      "type": "object",
+      "properties": {
+        "is_not_none": {},
+        "is_empty": {},
+        "is_false": {},
+        "is_type_of": {},
+        "is_instance_of": {},
+
+        "is_length": { "type": "integer" },
+        "is_not_empty": {},
+        "is_true": {},
+        "is_alpha": {},
+        "is_digit": {},
+        "is_lower": {},
+        "is_upper": {},
+        "is_iterable": {},
+        "is_equal_to": { "type": "string"},
+        "is_not_equal_to": { "type": "string"},
+        "is_equal_to_ignoring_case": { "type": "string"},
+
+        "is_unicode": {},
+
+        "contains": { "type": ["string", "array"] },
+        "contains_ignoring_case": { "type": ["string", "array"] },
+        "does_not_contain": { "type": ["string", "array"] },
+        "contains_only": { "type": ["string", "array"] },
+        "contains_sequence": { "type": ["string", "array"] },
+
+        "contains_duplicates": {},
+        "does_not_contain_duplicates": {},
+
+        "is_in": { "type": "array", "items": { "type": "string" } },
+        "is_not_in": { "type": "array", "items": { "type": "string" } },
+        "is_subset_of": { "type": "string"},
+
+        "starts_with": { "type": "string"},
+        "ends_with": { "type": "string"},
+
+        "matches": { "type": "string"},
+        "does_not_match": { "type": "string"}
+      },
+      "additionalProperties": false
+    },
+
+    "matching_integer": {
+      "type": "object",
+      "properties": {
+        "is_not_none": {},
+        "is_false": {},
+        "is_type_of": {},
+        "is_instance_of": {},
+
+        "is_zero": { "type": "integer" },
+        "is_not_zero": {},
+        "is_positive": {},
+        "is_negative": {},
+
+        "is_equal_to": { "type": "integer"},
+        "is_not_equal_to": { "type": "integer"},
+
+        "is_greater_than": { "type": "integer"},
+        "is_greater_than_or_equal_to": { "type": "integer"},
+        "is_less_than": { "type": "integer"},
+        "is_less_than_or_equal_to": { "type": "integer"},
+        "is_between": { "type": "array" },
+        "is_close_to": { "type": "array" },
+
+        "is_in": { "type": "array", "items": { "type": "integer" } },
+        "is_not_in": { "type": "array", "items": { "type": "integer" } }
+      },
+      "additionalProperties": false
+    },
+
+    "matching_dict": {
+      "type": "object",
+      "properties": {
+        "is_not_none": {},
+        "is_empty": {},
+        "is_false": {},
+        "is_type_of": {},
+        "is_instance_of": {},
+
+        "is_length": { "type": "integer" },
+        "is_not_empty": {},
+        "is_equal_to": { "type": "object"},
+        "is_not_equal_to": { "type": "object"},
+
+        "contains": { "type": ["string", "array"] },
+        "does_not_contain": { "type": ["string", "array"] },
+        "contains_only": { "type": ["string", "array"] },
+        "is_subset_of": { "type": "object"},
+
+        "contains_key": { "type": ["string", "array"] },
+        "does_not_contain_key": { "type": ["string", "array"] },
+
+        "contains_value": {},
+        "does_not_contain_value": {},
+
+        "contains_entry": { "type": ["object", "array"] },
+        "does_not_contain_entry": { "type": ["object", "array"] }
+      },
+      "additionalProperties": false
+    }
+  }
+}
