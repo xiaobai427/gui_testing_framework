@@ -149,9 +149,13 @@ class BaseDockWidget(CDockWidget, QObject):
         self.main_window.setup_additional_logic()
 
         # Set QMainWindow as the widget for the dock
-        self.content_widget.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
-        self.main_window.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        self.content_widget.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        self.main_window.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         self.setWidget(self.main_window)
+
+    @staticmethod
+    def get_factory():
+        return BaseDockWidgetFactory()
 
 
 class BaseDockWidgetFactory:
