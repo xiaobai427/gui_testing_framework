@@ -1,11 +1,11 @@
 from abc import abstractmethod
-from typing import Optional
 
 from PySide6.QtCore import QObject
 from PySide6.QtWidgets import QSizePolicy, QMainWindow, QMenuBar, QStatusBar
 from PySide6QtAds import CDockManager, CDockWidget
 
 from ngta_ui.lib.ui.base import BaseDataObservatory
+from typing import Optional, Dict, Any
 
 
 class DockManagerFactory:
@@ -72,13 +72,13 @@ class DockManagerFactory:
 
     @staticmethod
     def applyDefaultConfig():
-        CDockManager.setAutoHideConfigFlag(CDockManager.AutoHideFeatureEnabled)
+        CDockManager.setAutoHideConfigFlags(CDockManager.AutoHideFeatureEnabled)
         CDockManager.setConfigFlag(CDockManager.FocusHighlighting, True)
-        CDockManager.setAutoHideConfigFlag(CDockManager.DefaultAutoHideConfig)
-        CDockManager.setAutoHideConfigFlag(CDockManager.AutoHideShowOnMouseOver, True)
-        CDockManager.setAutoHideConfigFlag(CDockManager.DockAreaHasAutoHideButton)
-        CDockManager.setAutoHideConfigFlag(CDockManager.AutoHideButtonTogglesArea)
-        CDockManager.setAutoHideConfigFlag(CDockManager.AutoHideSideBarsIconOnly)
+        CDockManager.setAutoHideConfigFlags(CDockManager.DefaultAutoHideConfig)
+        CDockManager.setAutoHideConfigFlags(CDockManager.AutoHideShowOnMouseOver)
+        CDockManager.setAutoHideConfigFlags(CDockManager.DockAreaHasAutoHideButton)
+        CDockManager.setAutoHideConfigFlags(CDockManager.AutoHideButtonTogglesArea)
+        CDockManager.setAutoHideConfigFlags(CDockManager.AutoHideSideBarsIconOnly)
         CDockManager.setConfigFlag(CDockManager.EqualSplitOnInsertion)  # Setting the EqualSplitOnInsertion flag
 
 
@@ -130,21 +130,21 @@ class CustomMainWindow(QMainWindow):
 
 
 class BaseDockWidget(CDockWidget, QObject):
-    def __init__(self, title, dock_manager, enable_focus_events=False):
+    def __init__(self, title, dock_manager):
         super(BaseDockWidget, self).__init__(title)
         self.observer = BaseDataObservatory()
         self.dock_manager = dock_manager
         self.factory = self.get_factory()
         # Create the content widget, menu bar, and status bar using the factory
         self.content_widget = self.factory.create_content_widget()
-        menu_bar = self.factory.create_menu_bar()
-        status_bar = self.factory.create_status_bar()
+        self.menu_bar = self.factory.create_menu_bar()
+        self.status_bar = self.factory.create_status_bar()
 
         # Create and configure the custom QMainWindow
         self.main_window = CustomMainWindow(
             content_widget=self.content_widget,
-            menu_bar=menu_bar,
-            status_bar=status_bar
+            menu_bar=self.menu_bar,
+            status_bar=self.status_bar
         )
         self.main_window.setup_additional_logic()
 
@@ -154,19 +154,32 @@ class BaseDockWidget(CDockWidget, QObject):
         self.setWidget(self.main_window)
 
     @staticmethod
-    def get_factory():
+    def get_factory(self):
         return BaseDockWidgetFactory()
 
 
 class BaseDockWidgetFactory:
+    def __init__(self, interlink_components=False):
+        self.interlink_components = interlink_components
+        self.components = {}
+
     @abstractmethod
-    def create_content_widget(self):
+    def create_content_widget(self, context: Optional[Dict[str, Any]] = None):
         pass
 
     @abstractmethod
-    def create_menu_bar(self) -> Optional[QMenuBar]:
-        return None  # By default, do not create a menu bar
+    def create_menu_bar(self, context: Optional[Dict[str, Any]] = None) -> Optional[QMenuBar]:
+        # By default, do not create a menu bar unless overridden
+        return None
 
     @abstractmethod
-    def create_status_bar(self) -> Optional[QStatusBar]:
-        return None  # By default, do not create a status bar
+    def create_status_bar(self, context: Optional[Dict[str, Any]] = None) -> Optional[QStatusBar]:
+        # By default, do not create a status bar unless overridden
+        return None
+
+    def get_component(self, component_name: str):
+        return self.components.get(component_name)
+
+    def set_component(self, component_name: str, component_instance):
+        if self.interlink_components:
+            self.components[component_name] = component_instance
