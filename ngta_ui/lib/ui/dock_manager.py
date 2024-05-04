@@ -111,6 +111,9 @@ class DockManagerFactory:
 class CustomMainWindow(QMainWindow):
     def __init__(self, content_widget=None, menu_bar=None, status_bar=None, parent=None):
         super(CustomMainWindow, self).__init__(parent)
+        self.content_widget = content_widget
+        self.menu_bar = menu_bar
+        self.status_bar = status_bar
 
         # Set the central widget
         if content_widget:
