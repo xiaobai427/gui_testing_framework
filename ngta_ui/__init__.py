@@ -20,5 +20,5 @@ from .assertions import assert_that, assert_raises, assert_warn, soft_assertions
 from .errors import ErrorInfo, FailureError, WarningError, SkippedError, SoftAssertionsError, UnexpectedSuccessError
 from .constants import DEFAULT_LOG_LAYOUT, DEFAULT_LOG_LEVEL
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 __author__ = 'shibo.huang'
