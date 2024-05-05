@@ -4,8 +4,8 @@ from PySide6.QtWidgets import (
     QProgressBar, QDateTimeEdit, QTableView, QListView, QTreeView, QFrame,
     QTabWidget, QStatusBar, QMenuBar, QToolBar, QGroupBox, QLineEdit, QWidget
 )
-from PySide6.QtGui import QFont  # 导入字体支持
-from PySide6.QtCore import Qt  # 导入Qt核心模块，包括常量等
+from PySide6.QtGui import QFont, QKeyEvent  # 导入字体支持
+from PySide6.QtCore import Qt, QEvent  # 导入Qt核心模块，包括常量等
 
 
 # 自定义QLabel类，用于创建带有特定字体和样式的标签
@@ -162,3 +162,39 @@ class CustomQLineEdit(QLineEdit):
 
     def set_initial_value(self, value):
         self.setText(value)  # 设置初始文本值
+
+
+class IPLineEdit(CustomQLineEdit):
+    def __init__(self, parent=None):
+        super().__init__()
+        # 设置输入掩码
+        self.setInputMask("999.999.999.999;_")
+        self.setPlaceholderText("Enter IP Address: XXX.XXX.XXX.XXX")
+
+    def keyPressEvent(self, event: QKeyEvent):
+        # 先让基类处理按键事件（这将自动应用掩码）
+        super().keyPressEvent(event)
+        # 取得当前文本，根据掩码格式化
+        current_text = self.text()
+        parts = current_text.split('.')
+        corrected_parts = []
+
+        for part in parts:
+            if part.isdigit():
+                # 将数字限制在0到255之间
+                num = int(part)
+                if num > 255:
+                    corrected_part = ''
+                else:
+                    corrected_part = str(num)
+            else:
+                corrected_part = part
+
+            corrected_parts.append(corrected_part)
+
+        # 重新组合文本，并将其设置回文本框
+        new_text = '.'.join(corrected_parts)
+        # 设置新文本时防止光标位置变化
+        cursor_position = self.cursorPosition()
+        self.setText(new_text)
+        self.setCursorPosition(cursor_position)
