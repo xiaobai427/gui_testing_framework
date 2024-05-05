@@ -168,7 +168,8 @@ class IPLineEdit(CustomQLineEdit):
     def __init__(self, parent=None):
         super().__init__()
         # 设置输入掩码
-        self.setInputMask("999.999.999.999;_")
+        # 设置输入掩码，端口部分用;00000表示最多五位数字，;是占位符
+        self.setInputMask("999.999.999.999:00000;_")
         self.setPlaceholderText("Enter IP Address: XXX.XXX.XXX.XXX")
 
     def keyPressEvent(self, event: QKeyEvent):

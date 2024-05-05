@@ -72,13 +72,13 @@ class DockManagerFactory:
 
     @staticmethod
     def applyDefaultConfig():
-        CDockManager.setAutoHideConfigFlags(CDockManager.AutoHideFeatureEnabled)
+        CDockManager.setAutoHideConfigFlag(CDockManager.AutoHideFeatureEnabled)
         CDockManager.setConfigFlag(CDockManager.FocusHighlighting, True)
-        CDockManager.setAutoHideConfigFlags(CDockManager.DefaultAutoHideConfig)
-        CDockManager.setAutoHideConfigFlags(CDockManager.AutoHideShowOnMouseOver)
-        CDockManager.setAutoHideConfigFlags(CDockManager.DockAreaHasAutoHideButton)
-        CDockManager.setAutoHideConfigFlags(CDockManager.AutoHideButtonTogglesArea)
-        CDockManager.setAutoHideConfigFlags(CDockManager.AutoHideSideBarsIconOnly)
+        CDockManager.setAutoHideConfigFlag(CDockManager.DefaultAutoHideConfig)
+        CDockManager.setAutoHideConfigFlag(CDockManager.AutoHideShowOnMouseOver, True)
+        CDockManager.setAutoHideConfigFlag(CDockManager.DockAreaHasAutoHideButton)
+        CDockManager.setAutoHideConfigFlag(CDockManager.AutoHideButtonTogglesArea)
+        CDockManager.setAutoHideConfigFlag(CDockManager.AutoHideSideBarsIconOnly)
         CDockManager.setConfigFlag(CDockManager.EqualSplitOnInsertion)  # Setting the EqualSplitOnInsertion flag
 
 
