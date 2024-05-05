@@ -133,15 +133,15 @@ class CustomMainWindow(QMainWindow):
 
 
 class BaseDockWidget(CDockWidget, QObject):
-    def __init__(self, title, dock_manager):
+    def __init__(self, title, dock_manager, *args, **kwargs):
         super(BaseDockWidget, self).__init__(title)
         self.observer = BaseDataObservatory()
         self.dock_manager = dock_manager
-        self.factory = self.get_factory()
+        self.factory = self.get_factory(*args, **kwargs)
         # Create the content widget, menu bar, and status bar using the factory
-        self.content_widget = self.factory.create_content_widget()
-        self.menu_bar = self.factory.create_menu_bar()
-        self.status_bar = self.factory.create_status_bar()
+        self.content_widget = self.factory.create_content_widget(*args, **kwargs)
+        self.menu_bar = self.factory.create_menu_bar(*args, **kwargs)
+        self.status_bar = self.factory.create_status_bar(*args, **kwargs)
 
         # Create and configure the custom QMainWindow
         self.main_window = CustomMainWindow(
@@ -157,26 +157,26 @@ class BaseDockWidget(CDockWidget, QObject):
         self.setWidget(self.main_window)
 
     @staticmethod
-    def get_factory(self):
-        return BaseDockWidgetFactory()
+    def get_factory(self, *args, **kwargs):
+        return BaseDockWidgetFactory(*args, **kwargs)
 
 
 class BaseDockWidgetFactory:
-    def __init__(self, interlink_components=False):
+    def __init__(self, interlink_components=False, *args, **kwargs):
         self.interlink_components = interlink_components
         self.components = {}
 
     @abstractmethod
-    def create_content_widget(self, context: Optional[Dict[str, Any]] = None):
+    def create_content_widget(self, context: Optional[Dict[str, Any]] = None, *args, **kwargs):
         pass
 
     @abstractmethod
-    def create_menu_bar(self, context: Optional[Dict[str, Any]] = None) -> Optional[QMenuBar]:
+    def create_menu_bar(self, context: Optional[Dict[str, Any]] = None, *args, **kwargs) -> Optional[QMenuBar]:
         # By default, do not create a menu bar unless overridden
         return None
 
     @abstractmethod
-    def create_status_bar(self, context: Optional[Dict[str, Any]] = None) -> Optional[QStatusBar]:
+    def create_status_bar(self, context: Optional[Dict[str, Any]] = None, *args, **kwargs) -> Optional[QStatusBar]:
         # By default, do not create a status bar unless overridden
         return None
 
